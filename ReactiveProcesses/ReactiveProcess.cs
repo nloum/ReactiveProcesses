@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace ReactiveProcesses
 {
-    public class ReactiveProcess : IObserver<string>
+    public class ReactiveProcess
     {
         private Process _process;
+        private Subject<string> _standardInput = new Subject<string>();
 
         public ReactiveProcess(string fileName, string arguments, IScheduler scheduler = null)
         {
@@ -47,6 +49,8 @@ namespace ReactiveProcesses
             ExitCode = Observable.FromEventPattern<EventHandler, EventArgs>(handler => _process.Exited += handler,
                     handler => _process.Exited -= handler, scheduler).Select(ep => _process.ExitCode)
                 .Take(1);
+
+            _standardInput.Subscribe(text => _process.StandardInput.Write(text));
         }
 
         private IEnumerable<char> ReadLines(StreamReader reader)
@@ -60,18 +64,6 @@ namespace ReactiveProcesses
         public IObservable<char> StandardOutput { get; }
         public IObservable<char> StandardError { get; }
         public IObservable<int> ExitCode { get; }
-
-        public void OnCompleted()
-        {
-        }
-
-        public void OnError(Exception error)
-        {
-        }
-
-        public void OnNext(string value)
-        {
-            _process.StandardInput.Write(value);
-        }
+        public IObserver<string> StandardInput => _standardInput;
     }
 }
