@@ -5,6 +5,8 @@ using System.IO;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace ReactiveProcesses
 {
@@ -45,12 +47,19 @@ namespace ReactiveProcesses
 
             StandardOutput = ReadLines(_process.StandardOutput).ToObservable(scheduler);
             StandardError = ReadLines(_process.StandardError).ToObservable(scheduler);
-            
-            ExitCode = Observable.FromEventPattern<EventHandler, EventArgs>(handler => _process.Exited += handler,
-                    handler => _process.Exited -= handler, scheduler).Select(ep => _process.ExitCode)
-                .Take(1);
+
+            ExitCode = Wait();
 
             _standardInput.Subscribe(text => _process.StandardInput.Write(text));
+        }
+
+        private Task<int> Wait()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                _process.WaitForExit();
+                return _process.ExitCode;
+            }, TaskCreationOptions.LongRunning);
         }
 
         private IEnumerable<char> ReadLines(StreamReader reader)
@@ -63,7 +72,7 @@ namespace ReactiveProcesses
         
         public IObservable<char> StandardOutput { get; }
         public IObservable<char> StandardError { get; }
-        public IObservable<int> ExitCode { get; }
+        public Task<int> ExitCode { get; }
         public IObserver<string> StandardInput => _standardInput;
     }
 }
