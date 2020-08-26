@@ -4,12 +4,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveProcesses", "Reacti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveProcesses.TestCli", "ReactiveProcesses.TestCli\ReactiveProcesses.TestCli.csproj", "{375F6565-E700-4098-B4AF-0AECCEF61662}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{65B0A05D-E9F4-462C-9C25-650027F47881}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65B0A05D-E9F4-462C-9C25-650027F47881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B0A05D-E9F4-462C-9C25-650027F47881}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2CD127A-61F4-4B89-8A72-DD196190BC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2CD127A-61F4-4B89-8A72-DD196190BC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2CD127A-61F4-4B89-8A72-DD196190BC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
